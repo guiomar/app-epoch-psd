@@ -97,7 +97,7 @@ if picks==None:
     psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
 
-    psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=0)
+    psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=1)
     if freqs_grad==freqs_mag: 
         freqs=freqs_grad
     cangrad = fnmatch.filter(canales, '*[23]')
