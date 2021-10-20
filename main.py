@@ -16,6 +16,7 @@ import mne
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import shutil
 
 # Current path
 __location__ = os.path.realpath(
@@ -31,7 +32,8 @@ fname = config['fif']
 
 # Rename files so is MNE compliant
 fname_new = fname[:-4]+'-epo.fif'
-os.rename(fname, fname_new) # BORRAR!!!!
+#os.rename(fname, fname_new) # BORRAR!!!!
+shutil.copyfile(fname, fname_new)
 
 epoch = mne.read_epochs(fname_new)
 
