@@ -36,9 +36,8 @@ epoch = mne.read_epochs(os.path.join(fdir,fname))
 # == GET CONFIG VALUES ==
 
 fmin = config['fmin']
-fmax=config['fmax']
-#fmax=config['fmax'] if config['fmax'] else inf
-average = config['average']
+fmax = config['fmax']
+
 
 if config['picks']:
     #If its a list starting with square braket, convert to list of strings
@@ -52,12 +51,13 @@ else:
 # Advanced parameters
 tmin=config['tmin'] if config['tmin'] else None
 tmax=config['tmax'] if config['tmax'] else None
-n_fft = config['n_fft']
-n_overlap = config['n_overlap']
-n_per_seg=config['n_per_seg'] if config['n_per_seg'] else None
-window = config['window']
+
+bandwidth = 4
+adaptive=False, 
+low_bias=True, 
+normalization='length'
+
 proj = config['proj']
-reject_by_annotation = config['reject_by_annotation']
 #n_jobs = config['n_jobs']
 #verbose = config['verbose']
 
@@ -82,54 +82,44 @@ else:
 if picks==None:
 
     picks_mag='mag'
-    psd_welch_mag, freqs_mag = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_mag, proj=proj,
-                             reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
+    psd_welch_mag, freqs_mag = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            picks=picks_mag, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
     picks_grad='grad'
-    psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_grad, proj=proj,
-                             reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
+    psd_welch_grad, freqs_grad = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            picks=picks_grad, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_grad = 10*(np.log10(psd_welch_grad*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
 
-    '''picks_eeg='eeg'
-    psd_welch_eeg, freqs_eeg = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_eeg, proj=proj,
-                             reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
-    # Convert power to dB scale.
-    psd_welch_eeg = 10*(np.log10(psd_welch_eeg*1e6**2)) ## V^2/hz -> uV^2/Hz'''
+
 
     # FIGURE 1
     # Plot computed Welch PSD
     plt.figure(1)
-    fig, axs = plt.subplots(3)
-    '''axs[0].plot(freqs_eeg, psd_welch_eeg.transpose(), zorder=1) 
-    axs[0].set_xlim(xmin=0, xmax=max(freqs_eeg))
+    fig, axs = plt.subplots(2)
+
+    axs[0].plot(freqs_grad, psd_welch_grad.transpose(), zorder=1) 
+    axs[0].set_xlim(xmin=0, xmax=max(freqs_grad))
     axs[0].set_xlabel('Frequency (Hz)')
-    axs[0].set_ylabel('Power Spectral Density')'''
+    axs[0].set_ylabel('PSD - grad')
 
-    axs[1].plot(freqs_grad, psd_welch_grad.transpose(), zorder=1) 
-    axs[1].set_xlim(xmin=0, xmax=max(freqs_grad))
+    axs[1].plot(freqs_mag, psd_welch_mag.transpose(), zorder=1) 
+    axs[1].set_xlim(xmin=0, xmax=max(freqs_mag))
     axs[1].set_xlabel('Frequency (Hz)')
-    axs[1].set_ylabel('PSD - grad')
-
-    axs[2].plot(freqs_mag, psd_welch_mag.transpose(), zorder=1) 
-    axs[2].set_xlim(xmin=0, xmax=max(freqs_mag))
-    axs[2].set_xlabel('Frequency (Hz)')
-    axs[2].set_ylabel('PSD - mag')
+    axs[1].set_ylabel('PSD - mag')
 
     # Save fig
     plt.savefig(os.path.join('out_figs','psd_computed.png'))
 
 else:
     #SPECIFIC CHANNELS
-
-    psd_welch, freqs = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks, proj=proj,
-                             reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
+    psd_welch, freqs = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            picks=picks, proj=proj, n_jobs=1, verbose=None)
 
     # Convert power to dB scale.
     psd_welch = 10*(np.log10(psd_welch) + (2*15)) #psd_welch*(10**(2*15)) // psd_welch*1e30  # T**2/hz -> fT**2/Hz
