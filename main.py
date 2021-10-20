@@ -102,12 +102,12 @@ if picks==None:
     plt.figure(1)
     fig, axs = plt.subplots(2)
 
-    axs[0].plot(freqs_grad, psd_welch_grad.transpose(), zorder=1) 
+    axs[0].plot(freqs_grad, psd_welch_grad.mean(axis=0).transpose(), zorder=1) 
     axs[0].set_xlim(xmin=0, xmax=max(freqs_grad))
     axs[0].set_xlabel('Frequency (Hz)')
     axs[0].set_ylabel('PSD - grad')
 
-    axs[1].plot(freqs_mag, psd_welch_mag.transpose(), zorder=1) 
+    axs[1].plot(freqs_mag, psd_welch_mag.mean(axis=0).transpose(), zorder=1) 
     axs[1].set_xlim(xmin=0, xmax=max(freqs_mag))
     axs[1].set_xlabel('Frequency (Hz)')
     axs[1].set_ylabel('PSD - mag')
@@ -127,7 +127,7 @@ else:
     # FIGURE 1
     # Plot computed Welch PSD
     plt.figure(1)
-    plt.plot(freqs, psd_welch.transpose(), zorder=1) 
+    plt.plot(freqs, psd_welch.mean(axis=0).transpose(), zorder=1) 
     plt.xlim(xmin=0, xmax=max(freqs))
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Power Spectral Density')
