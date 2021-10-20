@@ -83,14 +83,14 @@ if picks==None:
 
     picks_mag='mag'
     psd_welch_mag, freqs_mag = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks=picks_mag, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
     picks_grad='grad'
     psd_welch_grad, freqs_grad = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks=picks_grad, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_grad = 10*(np.log10(psd_welch_grad*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
@@ -118,7 +118,7 @@ if picks==None:
 else:
     #SPECIFIC CHANNELS
     psd_welch, freqs = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                            bandwidth=bandwidth, adaptive=adaptive, low_bias=n_pelow_biasr_seg, normalization=normalization, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks=picks, proj=proj, n_jobs=1, verbose=None)
 
     # Convert power to dB scale.
