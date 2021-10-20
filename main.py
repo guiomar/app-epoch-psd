@@ -87,14 +87,14 @@ if picks==None:
                             bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks=picks_grad, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
-    psd_welch_grad = 10*(np.log10(psd_welch_grad*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
+    psd_welch_grad = 10*(np.log10(psd_welch_grad.mean(axis=0)*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
 
     picks_mag='mag'
     psd_welch_mag, freqs_mag = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                             bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks=picks_mag, proj=proj, n_jobs=1, verbose=None)
     # Convert power to dB scale.
-    psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
+    psd_welch_mag = 10*(np.log10(psd_welch_mag.mean(axis=0)*1e15**2)) # T^2/hz -> fT^2/Hz
 
 
     psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=1)
@@ -129,12 +129,12 @@ else:
                             picks=picks, proj=proj, n_jobs=1, verbose=None)
 
     # Convert power to dB scale.
-    psd_welch = 10*(np.log10(psd_welch) + (2*15)) #psd_welch*(10**(2*15)) // psd_welch*1e30  # T**2/hz -> fT**2/Hz
+    psd_welch = 10*(np.log10(psd_welch.mean(axis=0)) + (2*15)) #psd_welch*(10**(2*15)) // psd_welch*1e30  # T**2/hz -> fT**2/Hz
 
     # FIGURE 1
     # Plot computed Welch PSD
     plt.figure(1)
-    plt.plot(freqs, psd_welch.mean(axis=0).transpose(), zorder=1) 
+    plt.plot(freqs, psd_welch.transpose(), zorder=1) 
     plt.xlim(xmin=0, xmax=max(freqs))
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Power Spectral Density')
