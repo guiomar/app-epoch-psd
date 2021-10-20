@@ -27,19 +27,10 @@ with open(__location__+'/config.json') as config_json:
     config = json.load(config_json)
 
 # == LOAD DATA ==
-# FIF
 fdir = config['output']
 fname = os.listdir(fdir)[0]
-
 # Rename files so is MNE compliant
-#fname_new = os.path.join('out_dir','meg-epo.fif')
-#os.rename(fname, fname_new) # BORRAR!!!!
-#shutil.copyfile(fname, fname_new)
-
 epoch = mne.read_epochs(os.path.join(fdir,fname))
-
-#os.remove(fname_new) # BORRAR!!!!
-
 
 
 # == GET CONFIG VALUES ==
@@ -75,8 +66,8 @@ print(picks)
 
 
 # == GET SELECTED CHANNELS ==
+
 # Find selected channels indexes
-#info = mne.io.read_info(fname)
 info=epoch.info
 # If picks is left to by default (GUIO) -- USAR PICKS CASO GENERICO!!
 if picks==None:
