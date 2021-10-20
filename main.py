@@ -16,7 +16,7 @@ import mne
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import shutil
+import fnmatch
 
 # Current path
 __location__ = os.path.realpath(
