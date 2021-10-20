@@ -77,7 +77,7 @@ if picks==None:
 else:
     canales=picks
 
-# psd_welch.shape = Nchannels x Nfreqs
+# psd_welch.shape = Nepochs x Nchannels x Nfreqs
 
 # == COMPUTE PSD ==
 if picks==None:
@@ -97,7 +97,7 @@ if picks==None:
     psd_welch_mag = 10*(np.log10(psd_welch_mag.mean(axis=0)*1e15**2)) # T^2/hz -> fT^2/Hz
 
 
-    psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=1)
+    psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=0)
     if freqs_grad.all()==freqs_mag.all(): 
         freqs=freqs_grad
     cangrad = fnmatch.filter(canales, '*[23]')
