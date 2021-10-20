@@ -1,0 +1,16 @@
+{
+    "fif": "/Users/guiomar/Downloads/output/meg.fif",
+    "fmin": 0,
+    "fmax": 100,
+    "tmin": null,
+    "tmax": null,
+    "n_fft": 256,
+    "n_overlap": 0,
+    "n_per_seg": null,
+    "window": "hamming",
+    "proj": false,
+    "reject_by_annotation": true,
+    "average": "mean",
+    "picks": null
+
+}
