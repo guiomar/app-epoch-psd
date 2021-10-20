@@ -98,7 +98,7 @@ if picks==None:
 
 
     psd_welch = np.concatenate((psd_welch_grad,psd_welch_mag), axis=1)
-    if freqs_grad==freqs_mag: 
+    if freqs_grad.all()==freqs_mag.all(): 
         freqs=freqs_grad
     cangrad = fnmatch.filter(canales, '*[23]')
     canmag =  fnmatch.filter(canales, '*1')
