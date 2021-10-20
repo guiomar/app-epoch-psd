@@ -28,7 +28,9 @@ with open(__location__+'/config.json') as config_json:
 
 # == LOAD DATA ==
 # FIF
-fname = config['output']
+fdir = config['output']
+fname = os.listdir(fdir)
+fname = fname[0]
 
 # Rename files so is MNE compliant
 #fname_new = os.path.join('out_dir','meg-epo.fif')
