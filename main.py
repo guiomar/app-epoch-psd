@@ -28,7 +28,12 @@ with open(__location__+'/config.json') as config_json:
 # == LOAD DATA ==
 # FIF
 fname = config['fif']
-epoch = mne.read_epochs(fname)
+
+# Rename files so is MNE compliant
+fname_new = fname[:-4]+'-epo.fif'
+os.rename(fname, fname_new) # BORRAR!!!!
+
+epoch = mne.read_epochs(fname_new)
 
 # == GET CONFIG VALUES ==
 
