@@ -28,11 +28,7 @@ with open(__location__+'/config.json') as config_json:
 # == LOAD DATA ==
 # FIF
 fname = config['fif']
-raw = mne.io.read_raw_fif(fname)
-
-# CTF
-# fname = config['ctf']
-# raw = mne.io.read_raw_ctf(fname)
+epoch = mne.io.read_raw_fif(fname)
 
 # == GET CONFIG VALUES ==
 
@@ -62,8 +58,6 @@ reject_by_annotation = config['reject_by_annotation']
 #n_jobs = config['n_jobs']
 #verbose = config['verbose']
 
-#picks= ['MEG 0112', 'MEG 0113']
-
 print(tmin)
 print(picks)
 
@@ -71,12 +65,12 @@ print(picks)
 # == GET SELECTED CHANNELS ==
 # Find selected channels indexes
 #info = mne.io.read_info(fname)
-info=raw.info
+info=epoch.info
 # If picks is left to by default (GUIO) -- USAR PICKS CASO GENERICO!!
 if picks==None:
     ichan = mne.pick_types(info, meg=True, eeg=True, ref_meg=False, exclude=info['bads'])
     # Get channel names
-    canales = np.take(raw.ch_names,ichan)
+    canales = np.take(epoch.ch_names,ichan)
 else:
     canales=picks
 
@@ -85,21 +79,21 @@ else:
 if picks==None:
 
     picks_mag='mag'
-    psd_welch_mag, freqs_mag = mne.time_frequency.psd_welch(raw, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+    psd_welch_mag, freqs_mag = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                              n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_mag, proj=proj,
                              reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
     picks_grad='grad'
-    psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(raw, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+    psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                              n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_grad, proj=proj,
                              reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
     # Convert power to dB scale.
     psd_welch_grad = 10*(np.log10(psd_welch_grad*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
 
     '''picks_eeg='eeg'
-    psd_welch_eeg, freqs_eeg = mne.time_frequency.psd_welch(raw, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+    psd_welch_eeg, freqs_eeg = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                              n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks_eeg, proj=proj,
                              reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
     # Convert power to dB scale.
@@ -130,7 +124,7 @@ if picks==None:
 else:
     #SPECIFIC CHANNELS
 
-    psd_welch, freqs = mne.time_frequency.psd_welch(raw, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+    psd_welch, freqs = mne.time_frequency.psd_welch(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                              n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, picks=picks, proj=proj,
                              reject_by_annotation=reject_by_annotation, average=average, n_jobs=1, verbose=None)
 
@@ -165,7 +159,7 @@ df_psd.to_csv(os.path.join('out_dir','psd.csv')) #, sep = '\t', index=False)
 # FIGURE 2
 # Plot MNE PSD
 plt.figure(2)
-raw.plot_psd(tmin=tmin, tmax=tmax, fmin=fmin, fmax=fmax, proj=proj, n_fft=n_fft, n_overlap=n_overlap, window=window, 
+epoch.plot_psd(tmin=tmin, tmax=tmax, fmin=fmin, fmax=fmax, proj=proj, n_fft=n_fft, n_overlap=n_overlap, window=window, 
             ax=None, color='black', xscale='linear', area_mode='std', area_alpha=0.33, 
             dB=True, estimate='auto', show=True, n_jobs=1, average=False, 
             line_alpha=None, spatial_colors=True, sphere=None, verbose=None)
