@@ -36,7 +36,7 @@ fname = os.listdir(fdir)[0]
 #os.rename(fname, fname_new) # BORRAR!!!!
 #shutil.copyfile(fname, fname_new)
 
-epoch = mne.read_epochs(fname, preload=True)
+epoch = mne.read_epochs(os.path.join(fdir,fname))
 
 #os.remove(fname_new) # BORRAR!!!!
 
