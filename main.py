@@ -77,16 +77,10 @@ if picks==None:
 else:
     canales=picks
 
+# psd_welch.shape = Nchannels x Nfreqs
 
 # == COMPUTE PSD ==
 if picks==None:
-
-    picks_mag='mag'
-    psd_welch_mag, freqs_mag = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
-                            picks=picks_mag, proj=proj, n_jobs=1, verbose=None)
-    # Convert power to dB scale.
-    psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
     picks_grad='grad'
     psd_welch_grad, freqs_grad = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
@@ -95,7 +89,20 @@ if picks==None:
     # Convert power to dB scale.
     psd_welch_grad = 10*(np.log10(psd_welch_grad*1e13**2)) ## (T/m)^2/hz -> (fT/cm)^2/Hz
 
+    picks_mag='mag'
+    psd_welch_mag, freqs_mag = mne.time_frequency.psd_multitaper(epoch, fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
+                            picks=picks_mag, proj=proj, n_jobs=1, verbose=None)
+    # Convert power to dB scale.
+    psd_welch_mag = 10*(np.log10(psd_welch_mag*1e15**2)) # T^2/hz -> fT^2/Hz
 
+
+    psd_welch = np.concatenate(psd_welch_grad,psd_welch_mag, axis=0)
+    if freqs_grad==freqs_mag: 
+        freqs=freqs_grad
+    cangrad = fnmatch.filter(canales, '*[23]')
+    canmag =  fnmatch.filter(canales, '*1')
+    canales = cangrad + canmag
 
     # FIGURE 1
     # Plot computed Welch PSD
