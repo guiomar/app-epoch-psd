@@ -28,7 +28,7 @@ with open(__location__+'/config.json') as config_json:
 # == LOAD DATA ==
 # FIF
 fname = config['fif']
-epoch = mne.io.read_epochs(fname)
+epoch = mne.read_epochs(fname)
 
 # == GET CONFIG VALUES ==
 
