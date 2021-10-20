@@ -28,16 +28,16 @@ with open(__location__+'/config.json') as config_json:
 
 # == LOAD DATA ==
 # FIF
-fname = config['fif']
+fname = config['output']
 
 # Rename files so is MNE compliant
-fname_new = os.path.join('out_dir','meg-epo.fif')
+#fname_new = os.path.join('out_dir','meg-epo.fif')
 #os.rename(fname, fname_new) # BORRAR!!!!
-shutil.copyfile(fname, fname_new)
+#shutil.copyfile(fname, fname_new)
 
-epoch = mne.read_epochs(fname_new)
+epoch = mne.read_epochs(fname)
 
-os.remove(fname_new) # BORRAR!!!!
+#os.remove(fname_new) # BORRAR!!!!
 
 
 
