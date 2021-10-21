@@ -76,6 +76,8 @@ if picks==None:
         if i in ch_types: bb=bb+1
     plt.figure(1)
     fig, axs = plt.subplots(bb)
+    fig.subplots_adjust(hspace =.5, wspace=.2)
+
     aa=0
 
     if 'eeg' in ch_types:
@@ -99,6 +101,7 @@ if picks==None:
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('uV^2/Hz [dB]')
         axs[aa].set_title('PSD - EEG')
+        axs[aa].grid(linestyle=':')
         aa=aa+1
         
     if 'grad' in ch_types:
@@ -122,6 +125,7 @@ if picks==None:
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('(fT/cm)^2/Hz [dB]')
         axs[aa].set_title('PSD - Gradieometers')
+        axs[aa].grid(linestyle=':')
         aa=aa+1
 
     if 'mag' in ch_types:
@@ -145,6 +149,7 @@ if picks==None:
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('fT^2/Hz [dB]')
         axs[aa].set_title('PSD - Magnetometers')
+        axs[aa].grid(linestyle=':')
         aa=aa+1
 
     # Save fig
