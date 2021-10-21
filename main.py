@@ -78,6 +78,29 @@ if picks==None:
     fig, axs = plt.subplots(bb)
     aa=0
 
+    if 'eeg' in ch_types:
+        epochs_eeg = epochs.copy().pick('eeg')
+        ch_eeg = epochs_eeg.ch_names
+        psd_welch_eeg, freqs_eeg = mne.time_frequency.psd_multitaper(epochs_eeg, 
+                            fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
+                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
+                            picks='eeg', proj=proj, n_jobs=n_jobs, verbose=None)
+        # Convert power to dB scale: V^2/hz -> uV^2/Hz
+        psd_welch_eeg = 10*(np.log10(psd_welch_eeg.mean(axis=0)*1e6**2))
+
+        # Save to CSV file (could be also TSV)
+        df_psd = pd.DataFrame(psd_welch_eeg, index=ch_eeg, columns=freqs_eeg)
+        df_psd.index.name='channels'
+        df_psd.to_csv(os.path.join('out_dir','psd_eeg.csv')) #, sep = '\t', index=False)
+
+        # Figure
+        axs[aa].plot(freqs_eeg, psd_welch_eeg.transpose(), zorder=1) 
+        axs[aa].set_xlim(xmin=0, xmax=max(freqs_eeg))
+        axs[aa].set_xlabel('Frequency (Hz)')
+        axs[aa].set_ylabel('uV^2/Hz [dB]')
+        axs[aa].set_title('PSD - EEG')
+        aa=aa+1
+        
     if 'grad' in ch_types:
         epochs_grad = epochs.copy().pick('grad')
         ch_grad = epochs_grad.ch_names
@@ -97,7 +120,8 @@ if picks==None:
         axs[aa].plot(freqs_grad, psd_welch_grad.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_grad))
         axs[aa].set_xlabel('Frequency (Hz)')
-        axs[aa].set_ylabel('PSD - grad: (fT/cm)^2/Hz [dB]')
+        axs[aa].set_ylabel('(fT/cm)^2/Hz [dB]')
+        axs[aa].set_title('PSD - Gradieometers')
         aa=aa+1
 
     if 'mag' in ch_types:
@@ -119,30 +143,8 @@ if picks==None:
         axs[aa].plot(freqs_mag, psd_welch_mag.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_mag))
         axs[aa].set_xlabel('Frequency (Hz)')
-        axs[aa].set_ylabel('PSD - mag: fT^2/Hz [dB]')
-        aa=aa+1
-
-
-    if 'eeg' in ch_types:
-        epochs_eeg = epochs.copy().pick('eeg')
-        ch_eeg = epochs_eeg.ch_names
-        psd_welch_eeg, freqs_eeg = mne.time_frequency.psd_multitaper(epochs_eeg, 
-                            fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
-                            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
-                            picks='eeg', proj=proj, n_jobs=n_jobs, verbose=None)
-        # Convert power to dB scale: XXXXX
-        psd_welch_eeg = 10*(np.log10(psd_welch_eeg.mean(axis=0)*1e15**2))
-
-        # Save to CSV file (could be also TSV)
-        df_psd = pd.DataFrame(psd_welch_eeg, index=ch_eeg, columns=freqs_eeg)
-        df_psd.index.name='channels'
-        df_psd.to_csv(os.path.join('out_dir','psd_eeg.csv')) #, sep = '\t', index=False)
-
-        # Figure
-        axs[aa].plot(freqs_eeg, psd_welch_eeg.transpose(), zorder=1) 
-        axs[aa].set_xlim(xmin=0, xmax=max(freqs_eeg))
-        axs[aa].set_xlabel('Frequency (Hz)')
-        axs[aa].set_ylabel('PSD - eeg: xxxx [dB]')
+        axs[aa].set_ylabel('fT^2/Hz [dB]')
+        axs[aa].set_title('PSD - Magnetometers')
         aa=aa+1
 
     # Save fig
