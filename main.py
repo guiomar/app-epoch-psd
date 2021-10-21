@@ -46,7 +46,7 @@ low_bias=True,
 normalization='length'
 
 proj = config['proj']
-n_jobs=8
+n_jobs=1
 
 # Picks
 if config['picks']:
@@ -94,7 +94,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_grad.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_grad, psd_welch_grad.mean(axis=0).transpose(), zorder=1) 
+        axs[aa].plot(freqs_grad, psd_welch_grad.mean.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_grad))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - grad: (fT/cm)^2/Hz [dB]')
@@ -116,7 +116,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_mag.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_mag, psd_welch_mag.mean(axis=0).transpose(), zorder=1) 
+        axs[aa].plot(freqs_mag, psd_welch_mag.mean.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_mag))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - mag: fT^2/Hz [dB]')
@@ -139,7 +139,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_eeg.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_eeg, psd_welch_eeg.mean(axis=0).transpose(), zorder=1) 
+        axs[aa].plot(freqs_eeg, psd_welch_eeg.mean.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_eeg))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - eeg: xxxx [dB]')
@@ -154,7 +154,8 @@ if picks==None:
 # Plot MNE PSD
 plt.figure(2)
 figs_mne = epochs.plot_psd(tmin=tmin, tmax=tmax, fmin=fmin, fmax=fmax, 
-            proj=proj, n_fft=n_fft, n_overlap=n_overlap, window=window, 
+            proj=proj, picks=picks,
+            bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization,
             ax=None, color='black', xscale='linear', area_mode='std', area_alpha=0.33, 
             dB=True, estimate='auto', show=True, n_jobs=n_jobs, average=False, 
             line_alpha=None, spatial_colors=True, sphere=None, verbose=None)
