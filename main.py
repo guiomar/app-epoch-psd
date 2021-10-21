@@ -94,7 +94,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_grad.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_grad, psd_welch_grad.mean.transpose(), zorder=1) 
+        axs[aa].plot(freqs_grad, psd_welch_grad.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_grad))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - grad: (fT/cm)^2/Hz [dB]')
@@ -116,7 +116,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_mag.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_mag, psd_welch_mag.mean.transpose(), zorder=1) 
+        axs[aa].plot(freqs_mag, psd_welch_mag.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_mag))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - mag: fT^2/Hz [dB]')
@@ -139,7 +139,7 @@ if picks==None:
         df_psd.to_csv(os.path.join('out_dir','psd_eeg.csv')) #, sep = '\t', index=False)
 
         # Figure
-        axs[aa].plot(freqs_eeg, psd_welch_eeg.mean.transpose(), zorder=1) 
+        axs[aa].plot(freqs_eeg, psd_welch_eeg.transpose(), zorder=1) 
         axs[aa].set_xlim(xmin=0, xmax=max(freqs_eeg))
         axs[aa].set_xlabel('Frequency (Hz)')
         axs[aa].set_ylabel('PSD - eeg: xxxx [dB]')
