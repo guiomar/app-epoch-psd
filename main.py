@@ -61,8 +61,10 @@ else:
 
 # == COMPUTE PSD ==
 
-# psd_welch.shape = Nepochs x Nchannels x Nfreqs
+# psd_welch.shape: Nepochs x Nchannels x Nfreqs
 
+# Types of channels in the data
+# e.g. ['ecg', 'eog', 'grad', 'mag', 'eeg','misc', 'stim']
 ch_types=np.unique(epochs.get_channel_types())
 
 
@@ -160,7 +162,7 @@ if picks==None:
 # FIGURE 2
 # Plot MNE PSD
 plt.figure(2)
-figs_mne = epochs.plot_psd(tmin=tmin, tmax=tmax, fmin=fmin, fmax=fmax, 
+epochs.plot_psd(tmin=tmin, tmax=tmax, fmin=fmin, fmax=fmax, 
             proj=proj, picks=picks,
             bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization,
             ax=None, color='black', xscale='linear', area_mode='std', area_alpha=0.33, 
