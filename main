@@ -11,7 +11,9 @@
 # Author: Guiomar Niso
 
 # make output directory
-mkdir -p out_dir
+mkdir -p out_psd_grad
+mkdir -p out_psd_mag
+mkdir -p out_psd_eeg
 mkdir -p out_figs
 
 #python main.py
