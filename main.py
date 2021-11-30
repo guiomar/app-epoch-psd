@@ -5,11 +5,7 @@
 # Author: Guiomar Niso
 # Indiana University
 
-# Required libraries
-# pip install mne-bids coloredlogs tqdm pandas scikit-learn json_tricks fire
-
 # set up environment
-#import mne-study-template
 import os
 import json
 import mne
@@ -35,19 +31,20 @@ epochs = mne.read_epochs(fname)
 fmin = config['fmin']
 fmax = config['fmax']
 # Advanced parameters
-tmin=config['tmin'] if config['tmin'] else None
-tmax=config['tmax'] if config['tmax'] else None
+tmin = config['tmin'] if config['tmin'] else None
+tmax = config['tmax'] if config['tmax'] else None
 
-bandwidth = 4
-adaptive=False, 
-low_bias=True, 
-normalization='length'
+bandwidth = config['bandwidth']
+adaptive  = config['adaptive'] 
+low_bias  = config['low_bias']
+normalization = config['normalization']
+proj   = config['proj']
+n_jobs = 1
+picks  = None
 
-proj = config['proj']
-n_jobs=1
-
-# Picks
-if config['picks']:
+'''
+# Better don't allow picks as they can mix grad/mag/eeg and the unit 
+# conversion won't be straight forward to match raw.plot_psd resultsif config['picks']:
     #If its a list starting with square braket, convert to list of strings
     if config['picks'].find("[") == 0:
         picks = config['picks'].replace('[','').replace(']','').split(", ")
@@ -55,7 +52,7 @@ if config['picks']:
         picks = config['picks']   
 else: 
     picks=None
-
+'''
 
 # == COMPUTE PSD ==
 
@@ -64,8 +61,6 @@ else:
 # Types of channels in the data
 # e.g. ['ecg', 'eog', 'grad', 'mag', 'eeg','misc', 'stim']
 ch_types=np.unique(epochs.get_channel_types())
-
-
 
 if picks==None:
 
@@ -90,7 +85,7 @@ if picks==None:
         # Convert power to dB scale: V^2/hz -> uV^2/Hz
         psd_welch_eeg = 10*(np.log10(psd_welch_eeg.mean(axis=0)*1e6**2))
 
-        # Save to CSV file (could be also TSV)
+        # Save to TSV file
         df_psd = pd.DataFrame(psd_welch_eeg, index=ch_eeg, columns=freqs_eeg)
         df_psd.index.name='channels'
         df_psd.to_csv(os.path.join('out_psd_eeg','psd.tsv'), sep='\t')
@@ -114,7 +109,7 @@ if picks==None:
         # Convert power to dB scale: (T/m)^2/hz -> (fT/cm)^2/Hz
         psd_welch_grad = 10*(np.log10(psd_welch_grad.mean(axis=0)*1e13**2))
 
-        # Save to CSV file (could be also TSV)
+        # Save to TSV file
         df_psd = pd.DataFrame(psd_welch_grad, index=ch_grad, columns=freqs_grad)
         df_psd.index.name='channels'
         df_psd.to_csv(os.path.join('out_psd_grad','psd.tsv'), sep='\t')
@@ -138,7 +133,7 @@ if picks==None:
         # Convert power to dB scale: T^2/hz -> fT^2/Hz
         psd_welch_mag = 10*(np.log10(psd_welch_mag.mean(axis=0)*1e15**2))
 
-        # Save to CSV file (could be also TSV)
+        # Save to TSV file
         df_psd = pd.DataFrame(psd_welch_mag, index=ch_mag, columns=freqs_mag)
         df_psd.index.name='channels'
         df_psd.to_csv(os.path.join('out_psd_mag','psd.tsv'), sep='\t')
