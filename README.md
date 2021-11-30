@@ -3,7 +3,7 @@
 [![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.587-blue.svg)](https://doi.org/10.25663/brainlife.app.587)
 
-This Brainlife App computes Power Spectral Density (PSD) on MEG files using MNE-Python Welch method with `mne.time_frequency.psd_welch` function
+This Brainlife App computes Power Spectral Density (PSD) on MEG files using MNE-Python multitaper method with `mne.time_frequency.psd_multitaper` function
 
 ## Authors
 - Guiomar Niso (guiomar.niso@ctb.upm.es)
