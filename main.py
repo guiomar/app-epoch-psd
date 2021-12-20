@@ -43,8 +43,8 @@ n_jobs = 1
 picks  = None
 
 #For Welch
-n_fft=4096
-n_overlap=2000
+n_fft=2048
+n_overlap=1000
 n_per_seg=None
 window='hamming'
 reject_by_annotation=True
