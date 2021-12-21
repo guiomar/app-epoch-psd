@@ -42,13 +42,13 @@ proj   = config['proj']
 n_jobs = 1
 picks  = None
 
-#For Welch
+'''#For Welch
 n_fft=2048
 n_overlap=1000
 n_per_seg=None
 window='hamming'
 reject_by_annotation=True
-average='mean'
+average='mean''''
 
 '''
 # Better don't allow picks as they can mix grad/mag/eeg and the unit 
@@ -111,15 +111,15 @@ if picks==None:
     if 'grad' in ch_types:
         epochs_grad = epochs.copy().pick('grad')
         ch_grad = epochs_grad.ch_names
-        '''psd_welch_grad, freqs_grad = mne.time_frequency.psd_multitaper(epochs_grad, 
+        psd_welch_grad, freqs_grad = mne.time_frequency.psd_multitaper(epochs_grad, 
                             fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                             bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
-                            picks='grad', proj=proj, n_jobs=n_jobs, verbose=None)'''
-        psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epochs_grad, 
+                            picks='grad', proj=proj, n_jobs=n_jobs, verbose=None)
+       ''' psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epochs_grad, 
                             fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, 
                             reject_by_annotation=reject_by_annotation, average=average, 
-                            picks='grad', proj=proj,n_jobs=n_jobs, verbose=None)
+                            picks='grad', proj=proj,n_jobs=n_jobs, verbose=None)'''
         # Convert power to dB scale: (T/m)^2/hz -> (fT/cm)^2/Hz
         psd_welch_grad = 10*(np.log10(psd_welch_grad.mean(axis=0)*1e13**2))
 
