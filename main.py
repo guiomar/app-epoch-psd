@@ -48,7 +48,7 @@ n_overlap=1000
 n_per_seg=None
 window='hamming'
 reject_by_annotation=True
-average='mean''''
+average='mean'''
 
 '''
 # Better don't allow picks as they can mix grad/mag/eeg and the unit 
@@ -115,7 +115,7 @@ if picks==None:
                             fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                             bandwidth=bandwidth, adaptive=adaptive, low_bias=low_bias, normalization=normalization, 
                             picks='grad', proj=proj, n_jobs=n_jobs, verbose=None)
-       ''' psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epochs_grad, 
+        '''psd_welch_grad, freqs_grad = mne.time_frequency.psd_welch(epochs_grad, 
                             fmin=fmin, fmax=fmax, tmin=tmin, tmax=tmax, 
                             n_fft=n_fft, n_overlap=n_overlap, n_per_seg=n_per_seg, window=window, 
                             reject_by_annotation=reject_by_annotation, average=average, 
